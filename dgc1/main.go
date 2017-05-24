@@ -54,7 +54,7 @@ type performance struct {
 }
 
 const (
-	trippleBound = 1100000
+	trippleBound = 100000
 	//trippleBound = 1100000
 )
 
@@ -73,13 +73,13 @@ var (
 
 	dgraph = flag.String("d", "127.0.0.1:8080", "Dgraph server address")
 
-	outfile = "1million.rdf.gz"
+	outfile = "dgc1.rdf.gz"
 
 	directorByNameTemplate = `query directorTemplate($a: string)
 {
 	director(func: allofterms(name, $a)) @cascade {
 		name
-		director.film 
+		director.film
 	}
 }`
 	directorByNameMap = make(map[string]string)
@@ -87,8 +87,8 @@ var (
 	directorsMoviesTemplate = `{
 	movies(id: $a) @cascade {
 		name@en
-		director.film { 
-			name@en 
+		director.film {
+			name@en
 			name@de
 			name@it
       		starring {
@@ -103,7 +103,7 @@ var (
 				name@en
 			}
 			~director.film
-			initial_release_date 
+			initial_release_date
 		}
 	}
 }`
@@ -413,8 +413,6 @@ func visitDirector(dir uint64, dgraphClient protos.DgraphClient) {
 	}
 }
 
-
-
 func visitActor(actorID uint64, name string, dgraphClient protos.DgraphClient) {
 
 	if _, ok := actors[actorID]; !ok {
@@ -451,15 +449,3 @@ func visitActor(actorID uint64, name string, dgraphClient protos.DgraphClient) {
 		}
 	}
 }
-
-
-
-
-// // there must be a better way to do this in go?? ... oh found it strings.Repeat 
-// func nStr(n int, s string) (res string) {
-// 	res = ""
-// 	for i := 0; i < n; i++ {
-// 		res = fmt.Sprintf("%s%s", res, s)
-// 	}
-// 	return
-// }
